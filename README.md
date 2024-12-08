@@ -204,3 +204,27 @@ static var bykr := Bykr.register("MyData", MyData.new, {
 ```
 
 **Note:** Mappers should *never* keep state, because they're re-used.
+
+## Supported data types
+
+
+| Data Type        | Bykr           | GDScript     | Bytes | Note                                                                                                                                                                                                      |
+| ---------------- | -------------- | ------------ | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Boolean          | `Bykr.boolean` | `bool`       | 1     | Will likely support bit flags in future version to efficiently store multiple booleans.                                                                                                                   |
+| Half             | `Bykr.half`    | `float`      | 2     | A float, but with half the size in bytes.                                                                                                                                                                 |
+| Float            | `Bykr.float_`  | `float`      | 4     | Be aware that a float in gdscript is actually a double. But float will usually suffice in terms of precision. Also note that the Bykr type has an underscore (`_`) because `float` is a reserved keyword. |
+| Double           | `Bykr.double`  | `float`      | 8     | A float in gdscript is actually a 64-bit double. So use this if you wish to prefer full precision.                                                                                                        |
+| Signed byte      | `Bykr.s8`      | `int`        | 1     |                                                                                                                                                                                                           |
+| Signed short     | `Bykr.s16`     | `int`        | 2     |                                                                                                                                                                                                           |
+| Signed integer   | `Bykr.s32`     | `int`        | 4     |                                                                                                                                                                                                           |
+| Signed long      | `Bykr.s64`     | `int`        | 8     |                                                                                                                                                                                                           |
+| Unsigned byte    | `Bykr.u8`      | `int`        | 1     |                                                                                                                                                                                                           |
+| Unsigned short   | `Bykr.u16`     | `int`        | 2     |                                                                                                                                                                                                           |
+| Unsigned integer | `Bykr.u32`     | `int`        | 4     |                                                                                                                                                                                                           |
+| Unsigned long    | `Bykr.u64`     | `int`        | 8     | Handle with care, as it is technically not representable by gdscript's `int`.                                                                                                                             |
+| Vector3          | `Bykr.vec3`    | `Vector3`    | 12    |                                                                                                                                                                                                           |
+| Vector3i         | `Bykr.vec3i`   | `Vector3i`   | 24    |                                                                                                                                                                                                           |
+| String           | `Bykr.string`  | `String`     | -     | Maximum string length is 65535 characters (utf-8). Minimum size of this type will be 2 bytes, to store string length.                                                                                     |
+| Array            | `Bykr.array`   | `Array`      | -     | Maximum array length is 65535 elements. Size depends on contents. Minimum size of this type will be 2 bytes, to store array length.                                                                       |
+| Object           | `Bykr.object`  | custom class | -     | Size depends on data structure. Minimum size of this type will be 1 byte, to store whether the object is null or not.                                                                                     |
+| Enum             | Any int        | enum/int     | -     | Enums in gdscript are simply integers, so choose any Bykr int type that fits your highest enum value.                                                                                                     |
