@@ -36,6 +36,7 @@ static func vec3i() -> Mapper: return _VEC3I_MAPPER
 static func string() -> Mapper: return _STRING_MAPPER
 
 static func _static_init() -> void:
+	_REGISTRY["boolean"] = _BOOLEAN_MAPPER
 	_REGISTRY["double"] = _DOUBLE_MAPPER
 	_REGISTRY["float"] = _FLOAT_MAPPER
 	_REGISTRY["half"] = _HALF_MAPPER
@@ -215,6 +216,8 @@ class U64Mapper extends Mapper:
 		bytes.encode_u64(byte_offset, value as int)
 
 
+## Note: Vector3 stores 32-bit floats, even though default gdscript float is 64-bit.
+## See: https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#float
 class Vec3Mapper extends Mapper:
 	func _read_bytes_at(byte_offset: int, bytes: PackedByteArray) -> ReadResult:
 		var value := Vector3(
@@ -333,11 +336,11 @@ class ArrayMapper extends Mapper:
 		subtype_mapper = subtype_mapper_
 	
 	func _read_bytes_at(byte_offset: int, bytes: PackedByteArray) -> ReadResult:
-		var count: int = bytes.decode_u8(byte_offset)
+		var count: int = bytes.decode_u16(byte_offset)
 		var array: Array = []
 		array.resize(count)
-		byte_offset += 1
-		var bytes_read: int = 1
+		byte_offset += 2
+		var bytes_read: int = 2
 		for i: int in count:
 			var result: ReadResult = subtype_mapper._read_bytes_at(byte_offset, bytes)
 			array[i] = result.value
@@ -347,9 +350,9 @@ class ArrayMapper extends Mapper:
 	
 	func _append_bytes_to(value: Variant, byte_offset: int, bytes: PackedByteArray) -> void:
 		var array := value as Array
-		bytes.resize(byte_offset + 1)
-		bytes.encode_u8(byte_offset, array.size())
-		byte_offset += 1
+		bytes.resize(byte_offset + 2)
+		bytes.encode_u16(byte_offset, array.size())
+		byte_offset += 2
 		for element: Variant in array:
 			subtype_mapper._append_bytes_to(element, byte_offset, bytes)
 			byte_offset = bytes.size()
