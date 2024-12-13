@@ -4,9 +4,9 @@ class_name Bykr extends Resource
 static var _REGISTRY: Dictionary = {} # Class => Mapper
 
 static var _BOOLEAN_MAPPER := BooleanMapper.new()
-static var _DOUBLE_MAPPER := DoubleMapper.new()
-static var _FLOAT_MAPPER := FloatMapper.new()
 static var _HALF_MAPPER := HalfMapper.new()
+static var _FLOAT_MAPPER := FloatMapper.new()
+static var _DOUBLE_MAPPER := DoubleMapper.new()
 static var _S8_MAPPER := S8Mapper.new()
 static var _S16_MAPPER := S16Mapper.new()
 static var _S32_MAPPER := S32Mapper.new()
@@ -20,9 +20,9 @@ static var _VEC3I_MAPPER := Vec3iMapper.new()
 static var _STRING_MAPPER := StringMapper.new()
 
 static func boolean() -> Mapper: return _BOOLEAN_MAPPER
-static func double() -> Mapper: return _DOUBLE_MAPPER
-static func float_() -> Mapper: return _FLOAT_MAPPER
-static func half() -> Mapper: return _HALF_MAPPER
+static func f16() -> Mapper: return _HALF_MAPPER
+static func f32() -> Mapper: return _FLOAT_MAPPER
+static func f64() -> Mapper: return _DOUBLE_MAPPER
 static func s8() -> Mapper: return _S8_MAPPER
 static func s16() -> Mapper: return _S16_MAPPER
 static func s32() -> Mapper: return _S32_MAPPER
