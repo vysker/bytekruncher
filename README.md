@@ -15,6 +15,53 @@ See [this guide](https://docs.godotengine.org/en/stable/community/asset_library/
 * Copy the `addons/byte_kruncher/` folder to your godot project's `addons/` folder
 * Open your godot **Project Settings > Plugins** and enable ByteKruncher
 
+## Why?
+
+Why use ByteKruncher? Mostly to save bandwidth in multiplayer games!
+
+You could, for instance, use json or dictionaries to send data from one peer to another.
+Imagine you're sending this data:
+
+```gdscript
+var player_data = {
+    "level": 127,
+    "nickname": "MrCoolGuy",
+    "is_cool_guy": true
+}
+var json = JSON.stringify(player_data)
+# json = {"level":127,"nickname":"MrCoolGuy","is_cool_guy":true}
+```
+
+That json is 55 characters long, meaning its size is **55 bytes**, assuming the ubiquitous utf-8 encoding.
+That is quite a lot bytes for so little data.
+Using ByteKruncher, the same data is just **13 bytes**. **Saving us 76%** of data!
+
+## How?
+
+Whereas with json and dictionaries you encode the data **structure** along with the **values**, **ByteKruncher only encodes values**.
+
+So instead of sending
+
+```json
+{"level":127,"nickname":"MrCoolGuy","is_cool_guy":true}
+```
+
+ByteKruncher sends
+
+```
+127MrCoolGuytrue
+```
+
+This way we don't waste any bytes on data we don't have any use for.
+
+## But
+
+Why not use Godot's built-in `var_to_bytes()`?
+Because it breaks down quickly when sending data over networks.
+It wasn't built for that purpose.
+Besides, `var_to_bytes()` has to be wasteful, because it cannot infer the size of your data.
+ByteKruncher requires you to specify your data types manually, so it can be incredibly efficient in its encoding.
+
 ## Usage
 
 ### Simple example
